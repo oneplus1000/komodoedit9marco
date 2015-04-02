@@ -46,17 +46,12 @@ function GoImport() {
     var oldtext = ko.views.manager.currentView.scimoz.text;
     var koDoc = ko.views.manager.currentView.koDoc;
     var gofile =  koDoc.displayPath;
-    var goimport = 'goimports ' + gofile;
+    var goimport = 'goimports -w=true ' + gofile;
     var runSvc = Components.classes["@activestate.com/koRunService;1"].createInstance(Components.interfaces.koIRunService);
     var process = runSvc.RunAndNotify(goimport, '', '', '');
     var retval = process.wait(-1); /* wait till the process is done */
     if (retval == 0) {
-        //print_to_output_tab(process.getStdout());
-        var newtext = process.getStdout();
-        var diff = newtext.length - oldtext.length;
-        //print_to_output_tab(diff);
-        ko.views.manager.currentView.scimoz.text = newtext;
-        ko.views.manager.currentView.scimoz.gotoPos(currentPos+diff);
+        ko.commands.doCommand('cmd_revert');
     }
 }
 
